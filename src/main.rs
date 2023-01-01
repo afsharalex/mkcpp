@@ -4,6 +4,8 @@ use clap::{Parser, Subcommand, ValueEnum};
 
 use sailfish::TemplateOnce;
 
+// Templates
+
 #[derive(TemplateOnce)]
 #[template(path = "../templates/c/Makefile")]
 struct CMakefileTemplate {
@@ -29,11 +31,7 @@ struct CppCMakeListsTemplate {
 }
 
 
-const C_MAKEFILE_TEMPLATE: &str = include_str!("../templates/c/Makefile");
-const C_CMAKE_TEMPLATE: &str = include_str!("../templates/c/CMakeLists.txt");
-
-const CPP_MAKEFILE_TEMPLATE: &str = include_str!("../templates/cpp/Makefile");
-const CPP_CMAKE_TEMPLATE: &str = include_str!("../templates/cpp/CMakeLists.txt");
+// Commands and Arguments
 
 #[derive(Parser, Debug)]
 #[command(author, version, about = "Scaffold a project.", long_about = None)]
