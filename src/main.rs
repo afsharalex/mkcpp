@@ -73,6 +73,15 @@ impl Display for MakeType {
     }
 }
 
+struct ProjectTemplate<T: TemplateOnce> {
+    ctx: T,
+    path: String,
+}
+
+fn create_project<T: TemplateOnce>(ctx: T, path: String) {
+    std::fs::write(path, ctx.render_once().unwrap()).unwrap();
+}
+
 fn main() {
     let args = Cli::parse();
 
@@ -80,58 +89,53 @@ fn main() {
 
     println!("Project Name: {}", args.project_name);
     println!("\n");
+    let dir = format!("./{}", args.project_name);
+
+    // TODO: Handle error
+    std::fs::create_dir_all(dir.clone()).unwrap();
 
     match args.command {
         Commands::C { make_type } => {
             match make_type {
                 MakeType::MAKE => {
-                    println!("Makefile chosen.");
-                    println!("Makefile:");
-                    println!("----------------------------------------");
-
                     let ctx = CMakefileTemplate {
                         project_name: format!("{}", args.project_name),
                     };
 
-                    println!("{}", ctx.render_once().unwrap());
+                    let path = format!("{}/Makefile", dir.clone());
+
+                    create_project(ctx, path);
                 },
                 MakeType::CMAKE => {
-                    println!("CMakeLists.txt Chosen.");
-                    println!("CMakeLists.txt:");
-                    println!("----------------------------------------");
-
                     let ctx = CCMakeListsTemplate {
                         project_name: format!("{}", args.project_name),
                     };
 
-                    println!("{}", ctx.render_once().unwrap());
+                    let path = format!("{}/CMakeLists.txt", dir.clone());
+
+                    create_project(ctx, path);
                 }
             }
         },
         Commands::CPP { make_type } => {
             match make_type {
                 MakeType::MAKE => {
-                    println!("Makefile chosen.");
-                    println!("Makefile:");
-                    println!("----------------------------------------");
-
                     let ctx = CppMakefileTemplate {
                         project_name: format!("{}", args.project_name),
                     };
 
-                    println!("{}", ctx.render_once().unwrap());
-                    print!("\n\n");
+                    let path = format!("{}/Makefile", dir.clone());
+
+                    create_project(ctx, path);
                 },
                 MakeType::CMAKE => {
-                    println!("CMakeLists.txt Chosen.");
-                    println!("CMakeLists.txt:");
-                    println!("----------------------------------------");
-
                     let ctx = CppCMakeListsTemplate {
                         project_name: format!("{}", args.project_name),
                     };
 
-                    println!("{}", ctx.render_once().unwrap());
+                    let path = format!("{}/CMakeLists.txt", dir.clone());
+
+                    create_project(ctx, path);
                 }
             }
         },
