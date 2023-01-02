@@ -73,11 +73,6 @@ impl Display for MakeType {
     }
 }
 
-struct ProjectTemplate<T: TemplateOnce> {
-    ctx: T,
-    path: String,
-}
-
 fn create_project<T: TemplateOnce>(ctx: T, path: String) {
     std::fs::write(path, ctx.render_once().unwrap()).unwrap();
 }
@@ -85,10 +80,6 @@ fn create_project<T: TemplateOnce>(ctx: T, path: String) {
 fn main() {
     let args = Cli::parse();
 
-    println!("args: {:#?}", args);
-
-    println!("Project Name: {}", args.project_name);
-    println!("\n");
     let dir = format!("./{}", args.project_name);
 
     // TODO: Handle error
